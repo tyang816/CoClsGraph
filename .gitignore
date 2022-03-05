@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# front
+front/node_modules
+front/package-lock.json
+
+scui/
