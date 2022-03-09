@@ -69,7 +69,11 @@ class User(db.Model):
             "avatar": self.avatar
         }
 
-
+class Repository(db.Model):
+    # 定义表名
+    __tablename__ = 'repository'
+    # 定义字段
+    
 
 
 if __name__ == '__main__':
