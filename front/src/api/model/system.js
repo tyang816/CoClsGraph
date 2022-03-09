@@ -2,6 +2,15 @@ import config from "@/config"
 import http from "@/utils/request"
 
 export default {
+	login:{
+		in: {
+			url: `http://127.0.0.1:5000/login`,
+			name: "登录",
+			post: async function(params){
+				return await http.post(this.url, params);
+			}
+		}
+	},
 	menu: {
 		myMenus: {
 			url: `https://www.fastmock.site/mock/56a456597a6317b6713f9cc1c051f9aa/api/system/menu/my`,

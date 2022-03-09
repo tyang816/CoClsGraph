@@ -28,7 +28,7 @@ export default {
 		}
 	},
 	menu: {
-		url: `${config.API_URL}/demo/menu`,
+		url: `https://www.fastmock.site/mock/56a456597a6317b6713f9cc1c051f9aa/api/guest/menu`,
 		name: "普通用户菜单",
 		get: async function(){
 			return await http.get(this.url);

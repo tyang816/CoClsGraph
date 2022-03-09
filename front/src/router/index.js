@@ -62,13 +62,6 @@ router.beforeEach(async (to, from, next) => {
 	//加载动态/静态路由
 	if(!isGetRouter){
 		let apiMenu = tool.data.get("MENU") || []
-		let userInfo = tool.data.get("USER_INFO")
-		console.log(userRoutes)
-		let userMenu = treeFilter(userRoutes, node => {
-			return node.meta.role ? node.meta.role.filter(item=>userInfo.role.indexOf(item)>-1).length > 0 : true
-		})
-		console.log('user')
-		console.log(userMenu)
 		let menu = [...userRoutes, ...apiMenu]
 		var menuRouter = filterAsyncRouter(menu)
 		menuRouter = flatAsyncRoutes(menuRouter)

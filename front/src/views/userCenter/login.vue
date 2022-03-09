@@ -3,8 +3,6 @@
 		<div class="login_adv" style="background-image: url(img/auth_banner.jpg);">
 			<div class="login_adv__title">
 				<h2>CoDesc</h2>
-				<h4>{{ $t('login.slogan') }}</h4>
-				<p>{{ $t('login.describe') }}</p>
 				<div>
 					<span>
 						<el-icon><sc-icon-vue /></el-icon>
@@ -152,10 +150,11 @@
 				this.islogin = true
 				var data = {
 					username: this.ruleForm.user,
-					password: this.$TOOL.crypto.MD5(this.ruleForm.password)
+					password: this.ruleForm.password
 				}
 				//获取token
 				var user = await this.$API.auth.token.post(data)
+				
 				if(user.code == 200){
 					this.$TOOL.data.set("TOKEN", user.data.token)
 					this.$TOOL.data.set("USER_INFO", user.data.userInfo)
@@ -164,6 +163,7 @@
 					this.$message.warning(user.message)
 					return false
 				}
+				
 				//获取菜单
 				var menu = null
 				if(this.ruleForm.user == 'admin'){

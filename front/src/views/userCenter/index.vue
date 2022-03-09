@@ -6,17 +6,14 @@
 					<div class="user-info">
 						<div class="user-info-top">
 							<el-avatar :size="80" src="img/avatar.jpg"></el-avatar>
-							<h2>{{ form.name||'-' }}</h2>
+							<h2>{{ form.username||'-' }}</h2>
 							<p>{{ form.about||'无签名' }}</p>
 							<el-button type="primary" round icon="el-icon-collection-tag" size="large">Administrator</el-button>
 						</div>
 						<div class="user-info-main">
 							<ul>
-								<li><label><el-icon><el-icon-user /></el-icon></label><span>ty_ang@163.com</span></li>
-								<li><label><el-icon><el-icon-male /></el-icon></label><span>男</span></li>
-								<li><label><el-icon><el-icon-location /></el-icon></label><span>中国/上海/徐汇</span></li>
-								<li><label><el-icon><el-icon-office-building /></el-icon></label><span>华东理工大学</span></li>
-								<li><label><el-icon><el-icon-coin /></el-icon></label><span>超级管理员</span></li>
+								<li><label><el-icon><el-icon-location /></el-icon></label><span>{{form.locate}}</span></li>
+								<li><label><el-icon><el-icon-office-building /></el-icon></label><span>{{form.school}}</span></li>
 							</ul>
 						</div>
 					</div>
@@ -27,12 +24,9 @@
 					<el-tabs tab-position="top">
 						<el-tab-pane :label="$t('user.info')">
 							<el-form ref="form" :model="form" label-width="80px" style="width: 460px;margin-top:20px;">
-								<el-form-item label="账号">
-									<el-input v-model="form.user" disabled></el-input>
-									<div class="el-form-item-msg">账号信息用于登录，系统不允许修改</div>
-								</el-form-item>
-								<el-form-item label="姓名">
-									<el-input v-model="form.name"></el-input>
+								<el-form-item label="用户名">
+									<el-input v-model="form.username" disabled></el-input>
+									<div class="el-form-item-msg">用户名用于登录，系统不允许修改</div>
 								</el-form-item>
 								<el-form-item label="性别">
 									<el-select v-model="form.sex" placeholder="请选择">
@@ -83,10 +77,11 @@
 		data() {
 			return {
 				form: {
-					user: "ty_ang@163.com",
-					name: "tyang",
-					sex: "1",
-					about: "正所谓富贵险中求"
+					username: this.$TOOL.data.get('USER_INFO')['userName'],
+					sex: this.$TOOL.data.get('USER_INFO')['userSex'].toString(),
+					about: this.$TOOL.data.get('USER_INFO')['userIntro'],
+					locate: this.$TOOL.data.get('USER_INFO')['userLocate'],
+					school: this.$TOOL.data.get('USER_INFO')['userSchool']
 				},
 				colorList: ['#409EFF', '#009688', '#536dfe', '#ff5c93', '#c62f2f', '#fd726d'],
 				config: {

@@ -31,9 +31,7 @@
 			}
 		},
 		created(){
-			this.dashboard = this.$TOOL.data.get("USER_INFO").dashboard || '0';
-			var menu = this.$API.system.menu.myMenus.get()
-			console.log(menu)
+
 		},
 		mounted(){
 
