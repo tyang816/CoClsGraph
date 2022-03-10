@@ -134,3 +134,6 @@ front/package-lock.json
 
 scui/
 GithubSpy/
+backend/core
+test.py
+backend/flask-app/data
