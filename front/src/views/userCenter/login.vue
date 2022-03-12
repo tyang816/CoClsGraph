@@ -154,7 +154,7 @@
 				}
 				//获取token
 				var user = await this.$API.auth.token.post(data)
-				
+				console.log(user)
 				if(user.code == 200){
 					this.$TOOL.data.set("TOKEN", user.data.token)
 					this.$TOOL.data.set("USER_INFO", user.data.userInfo)

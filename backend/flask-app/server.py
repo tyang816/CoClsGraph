@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from db import User, Role
+from db import *
 import json
 
 
@@ -44,16 +44,48 @@ def token():
                                 "userSchool": user.school, "userAvatar": user.avatar}
                 }
             }
-        print(user)
     return jsonify(res)
 
 
 
 
-@app.route("/comment", methods=['POST'])
-def comment():
-    
-    return 
+@app.route("/base", methods=['POST'])
+def basemethod():
+    res = {"code":"500"}
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        base_id = data['base_id']
+        base  = Base.query.filter_by(id=base_id).first()
+        if base:
+            res = {
+                "code": "200",
+                "data": {
+                    "method": base.method, "summary": base.summary, 
+                    "method_token": base.method_token, "summary_token": base.summary_token
+                }
+            }
+
+    return jsonify(res)
+
+
+
+@app.route("/class2base", methods=['POST'])
+def class2base():
+    res = {"code":"500"}
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        base_id = data['base_id']
+        class2base  = Class2Base.query.filter_by(base_id=base_id).all()
+        if class2base[0]:
+            res = {
+                "code": "200",
+                "data": [ 
+                    {"method": class2base_i.method, "method_token": class2base_i.method_token} for class2base_i in class2base
+                ]
+            }
+
+    return jsonify(res)
+
 
 
 if __name__ == "__main__":
