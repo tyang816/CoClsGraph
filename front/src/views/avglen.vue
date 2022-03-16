@@ -1,6 +1,6 @@
 <template>
 	<el-main>
-		<el-alert title="感谢百度Echarts组件, SCUI经过封装后在VUE里使用更方便而且暴露Echarts所有方法,具体请查看本文件" type="success" style="margin-bottom:20px;"></el-alert>
+		<el-alert title="各种数据的平均长度" type="success" style="margin-bottom:20px;"></el-alert>
 		<el-row :gutter="15">
 			<el-col :lg="8">
 				<el-card shadow="never">
@@ -42,7 +42,7 @@
 	 */
 
 	export default {
-		name: 'chart',
+		name: 'avglen',
 		components: {
 			scEcharts
 		},

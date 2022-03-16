@@ -15,4 +15,11 @@ export default {
 			return await http.post(this.url, data);
 		}
 	},
+	relateshow: {
+		url: `http://127.0.0.1:5000/relateshow`,
+		name: "获取一个仓库关系图",
+		post: async function(data={}){
+			return await http.post(this.url, data);
+		}
+	}
 }

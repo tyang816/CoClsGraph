@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import data_tools as dt
+import json
+from tqdm import tqdm
 
 app = Flask(__name__)
 
@@ -76,6 +78,14 @@ class Repository(db.Model):
     path = db.Column(db.String(512), unique=True)
     url = db.Column(db.String(512))
     finished = db.Column(db.Boolean, default=False)
+    
+    def __init__(self, id_, name, path, url, finished):
+        self.id = id_
+        self.name = name
+        self.path = path
+        self.url = url
+        self.finished = finished
+        
 
 
 class SourceDir(db.Model):
@@ -87,6 +97,11 @@ class SourceDir(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     repository_id = db.Column(db.Integer, db.ForeignKey('repository.id',ondelete='CASCADE'))
     path = db.Column(db.String(512), unique=True)
+    
+    def __init__(self, id_, repository_id, path):
+        self.id = id_
+        self.repository_id = repository_id
+        self.path = path
 
 
 class Package(db.Model):
@@ -96,7 +111,13 @@ class Package(db.Model):
     source_dir_id = db.Column(db.Integer, db.ForeignKey('sourcedir.id',ondelete='CASCADE'))
     name = db.Column(db.String(512))
     path = db.Column(db.String(512), unique=True)
-
+    
+    def __init__(self, id_, source_dir_id, name, path):
+        self.id = id_
+        self.source_dir_id = source_dir_id
+        self.name = name
+        self.path = path
+        
 
 class Java(db.Model):
     __tablename__ = 'java'
@@ -106,6 +127,13 @@ class Java(db.Model):
     name = db.Column(db.String(512))
     path = db.Column(db.String(512), unique=True)
     xml = db.Column(db.String(512), nullable=True)
+    
+    def __init__(self, id_, package_id, name, path, xml):
+        self.id = id_
+        self.package_id = package_id
+        self.name = name
+        self.path = path
+        self.xml = xml
 
 
 class Clazz(db.Model):
@@ -117,6 +145,15 @@ class Clazz(db.Model):
     tpe = db.Column(db.String(128), nullable=True)
     signature = db.Column(db.Text, nullable=True)
     comment = db.Column(db.Text, nullable=True)
+    
+    def __init__(self, id_, java_id, name, tpe, signature, comment):
+        self.id = id_
+        self.java_id = java_id
+        self.name = name
+        self.tpe = tpe
+        self.signature = signature
+        self.comment = comment
+
 
 class Import(db.Model):
     __tablename__ = 'import'
@@ -124,6 +161,12 @@ class Import(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     java_id = db.Column(db.Integer, db.ForeignKey('java.id',ondelete='CASCADE'))
     import_clazz_id = db.Column(db.Integer, db.ForeignKey('clazz.id',ondelete='CASCADE'))
+    
+    def __init__(self, id_, java_id, import_clazz_id):
+        self.id = id_
+        self.java_id = java_id
+        self.import_clazz_id = import_clazz_id
+
 
 class Inherit(db.Model):
     __tablename__ = 'inherit'
@@ -131,6 +174,12 @@ class Inherit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     super_clazz_id = db.Column(db.Integer, db.ForeignKey('clazz.id',ondelete='CASCADE'))
     sub_clazz_id = db.Column(db.Integer, db.ForeignKey('clazz.id',ondelete='CASCADE'))
+    
+    def __init__(self, id_, super_clazz_id, sub_clazz_id):
+        self.id = id_
+        self.super_clazz_id = super_clazz_id
+        self.sub_clazz_id = sub_clazz_id
+
 
 class Attribute(db.Model):
     __tablename__ = 'attribute'
@@ -139,6 +188,13 @@ class Attribute(db.Model):
     clazz_id = db.Column(db.Integer, db.ForeignKey('clazz.id',ondelete='CASCADE'))
     tpe = db.Column(db.String(128))
     name = db.Column(db.String(128))
+    
+    def __init__(self, id_, clazz_id, tpe, name):
+        self.id = id_
+        self.clazz_id = clazz_id
+        self.tpe = tpe
+        self.name = name
+
 
 class Method(db.Model):
     __tablename__ = 'method'
@@ -152,6 +208,18 @@ class Method(db.Model):
     arg_num = db.Column(db.Integer)
     content = db.Column(db.Text, nullable=True)
     doc = db.Column(db.Text, nullable=True)
+    
+    def __init__(self, id_, clazz_id, name, tag, signature, tpe, arg_num, content, doc):
+        self.id = id_
+        self.clazz_id = clazz_id
+        self.name = name
+        self.tag = tag
+        self.signature = signature
+        self.tpe = tpe
+        self.arg_num = arg_num
+        self.content = content
+        self.doc = doc
+
 
 class Call(db.Model):
     __tablename__ = 'call'
@@ -160,6 +228,13 @@ class Call(db.Model):
     callee_id = db.Column(db.Integer, db.ForeignKey('method.id',ondelete='CASCADE'))
     called_id = db.Column(db.Integer, db.ForeignKey('method.id',ondelete='CASCADE'))
     statement = db.Column(db.Text, nullable=True)
+    
+    def __init__(self, id_, callee_id, called_id, statement):
+        self.id = id_
+        self.callee_id = callee_id
+        self.called_id = called_id
+        self.statement = statement
+        
 
 class Override(db.Model):
     """
@@ -170,7 +245,12 @@ class Override(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     source_method_id = db.Column(db.Integer, db.ForeignKey('method.id',ondelete='CASCADE'))
     rewrite_method_id = db.Column(db.Integer, db.ForeignKey('method.id',ondelete='CASCADE'))
-
+    
+    def __init__(self, id_, source_method_id, rewrite_method_id):
+        self.id = id_
+        self.source_method_id = source_method_id
+        self.rewrite_method_id = rewrite_method_id
+        
 
 class Base(db.Model):
     __tablename__ = 'base'
@@ -181,7 +261,8 @@ class Base(db.Model):
     method_token = db.Column(db.Text)
     summary_token = db.Column(db.Text)
 
-    def __init__(self, method, summary, method_token, summary_token):
+    def __init__(self, id_, method, summary, method_token, summary_token):
+        self.id = id_
         self.method = method
         self.summary = summary
         self.method_token = method_token
@@ -196,43 +277,143 @@ class Class2Base(db.Model):
     method_token = db.Column(db.Text)
 
     def __init__(self, base_id, method, method_token):
+        self.id = id_
         self.base_id = base_id
         self.method = method
         self.method_token = method_token
 
 
-if __name__ == '__main__':
-    # 删除所有表
-    db.drop_all()
-    # 创建所有表
-    db.create_all()
-    
-    admin_role = Role('超级管理员')
-    guest_role = Role('普通用户')
-    db.session.add(admin_role)
-    db.session.add(guest_role)
-    db.session.commit()
-
-    admin = User('admin', 'admin', 1, '无话可说', '中国/上海/徐汇', '华东理工大学', 1)
-    guest = User('user', 'user', 1, '无话可说', '中国/上海/徐汇', '华东理工大学', 2)
-    db.session.add(admin)
-    db.session.add(guest)
-    db.session.commit()
-
-    base_method = dt.load_base('data/base.json', key='method', is_json=True)
-    base_summry = dt.load_base('data/base.json', key='summary', is_json=True)
-    class_method = dt.load_class('data/class.json', key='class_methods')
-    
-    base_method_token = dt.tokenize_code(base_method)
-    base_summry_token = dt.tokenize_code(base_summry)
-    class_method_token = [dt.tokenize_code(c) for c in class_method]
-    
-    for i in range(len(base_method)):
-        base = Base(base_method[i], base_summry[i], str(base_method_token[i]), str(base_summry_token[i]))
-        db.session.add(base)
+def migrate_repository():
+    with open('./data/all/repository.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        repository = Repository(n_line['id'], n_line['name'], n_line['path'],
+                                n_line['url'], n_line['finished'])
+        db.session.add(repository)
         db.session.commit()
-        for j in range(len(class_method[i])):
-            class2base = Class2Base(i+1, class_method[i][j], str(class_method_token[i][j]))
-            db.session.add(class2base)
-            db.session.commit()
 
+def migrate_sourcedir():
+    with open('./data/all/sourcedir.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        sourceDir = SourceDir(n_line['id'], n_line['repository_id'], n_line['path'])
+        db.session.add(sourceDir)
+        db.session.commit()
+
+
+def migrate_package():
+    with open('./data/all/package.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        package = Package(n_line['id'], n_line['source_dir_id'], n_line['name'], n_line['path'])
+        db.session.add(package)
+        db.session.commit()
+
+
+def migrate_java():
+    with open('./data/all/java.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        java = Java(n_line['id'], n_line['package_id'], n_line['name'], n_line['path'], n_line['xml'])
+        db.session.add(java)
+        db.session.commit()
+
+def migrate_import():
+    with open('./data/all/import.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        import_ = Import(n_line['id'], n_line['java_id'], n_line['import_clazz_id'])
+        db.session.add(import_)
+        db.session.commit()
+
+
+def migrate_clazz():
+    with open('./data/all/clazz.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        clazz = Clazz(n_line['id'], n_line['java_id'], n_line['name'], 
+                      n_line['tpe'], n_line['signature'], n_line['comment'])
+        db.session.add(clazz)
+        db.session.commit()
+
+def migrate_inherit():
+    with open('./data/all/inherit.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        print(n_line)
+        
+        query_inherit = Inherit.query.filter_by(id=n_line['id']).first()
+        if query_inherit:
+            continue
+        inherit = Inherit(n_line['id'], n_line['super_clazz_id'], n_line['sub_clazz_id'])
+        
+        db.session.add(inherit)
+        db.session.commit()
+        
+        
+
+
+def migrate_method():
+    with open('./data/all/method.json', 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in tqdm(lines):
+        n_line = json.loads(line)
+        query_method = Method.query.filter_by(id=n_line['id']).first()
+        if query_method:
+            continue
+        method = Method(n_line['id'], n_line['clazz_id'], n_line['name'], n_line['tag'],
+                        n_line['signature'], n_line['tpe'], n_line['arg_num'], n_line['content'],
+                        n_line['doc'])
+        db.session.add(method)
+        db.session.commit()
+
+
+if __name__ == '__main__':
+    # # 删除所有表
+    # db.drop_all()
+    # # 创建所有表
+    # db.create_all()
+    
+    # admin_role = Role('超级管理员')
+    # guest_role = Role('普通用户')
+    # db.session.add(admin_role)
+    # db.session.add(guest_role)
+    # db.session.commit()
+
+    # admin = User('admin', 'admin', 1, '无话可说', '中国/上海/徐汇', '华东理工大学', 1)
+    # guest = User('user', 'user', 1, '无话可说', '中国/上海/徐汇', '华东理工大学', 2)
+    # db.session.add(admin)
+    # db.session.add(guest)
+    # db.session.commit()
+
+    # base_method = dt.load_base('data/base.json', key='method', is_json=True)
+    # base_summry = dt.load_base('data/base.json', key='summary', is_json=True)
+    # class_method = dt.load_class('data/class.json', key='class_methods')
+    
+    # base_method_token = dt.tokenize_code(base_method)
+    # base_summry_token = dt.tokenize_code(base_summry)
+    # class_method_token = [dt.tokenize_code(c) for c in class_method]
+    
+    # for i in range(len(base_method)):
+    #     base = Base(base_method[i], base_summry[i], str(base_method_token[i]), str(base_summry_token[i]))
+    #     db.session.add(base)
+    #     db.session.commit()
+    #     for j in range(len(class_method[i])):
+    #         class2base = Class2Base(i+1, class_method[i][j], str(class_method_token[i][j]))
+    #         db.session.add(class2base)
+    #         db.session.commit()
+    migrate_method()
+    

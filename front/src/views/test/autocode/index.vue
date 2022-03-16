@@ -1,7 +1,7 @@
 <template>
 	<router-view></router-view>
 	<el-main>
-		<el-alert title="请先点击`初始化`按钮初始化一个图数据！" type="success" style="margin-bottom:20px;">
+		<el-alert title="请先点击`初始化`按钮初始化一个图数据，当出现`初始化成功`提示后进入各个功能板块！" type="success" style="margin-bottom:20px;">
 			<el-button type="primary" @click="init">初始化</el-button>
 		</el-alert>
 		<el-row :gutter="15">
@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import { List } from 'echarts';
+	import { ElNotification } from 'element-plus';
+
 	export default {
 		name: 'autocode',
 		data() {
@@ -121,7 +122,10 @@ import { List } from 'echarts';
 				var data1 = this.$TOOL.data.get('STEP1_DATA')
 				var link1 = this.$TOOL.data.get('STEP1_LINK')
 				var sumry = this.$TOOL.data.get('SUMMARY')
-				
+				ElNotification.success({
+					title: '初始化',
+					message: '初始化成功！请进入各个页面功能查看详情~',
+				})
 				console.log(data1)
 				console.log(link1)
 				console.log(sumry)

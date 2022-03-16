@@ -66,7 +66,7 @@
 					{
 						id: '1',
 						start: 3000,
-						txt: 'SCUI VIDEO DEMO'
+						txt: 'VIDEO DEMO'
 					},
 					{
 						id: '2',

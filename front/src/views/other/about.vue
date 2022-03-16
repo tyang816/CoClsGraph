@@ -8,7 +8,34 @@
 						<h2>CoDesc</h2>
 					</div>
 				</el-card>
-				<el-card shadow="never" header="dependencies">
+				<el-card shadow="never" header="deepDependencies">
+					<el-descriptions border :column="3">
+						<el-descriptions-item label="torch">1.10.1</el-descriptions-item>
+						<el-descriptions-item label="torch-cluster">1.5.9</el-descriptions-item>
+						<el-descriptions-item label="torch-geometric">2.0.3</el-descriptions-item>
+						<el-descriptions-item label="torch-scatter">2.0.9</el-descriptions-item>
+						<el-descriptions-item label="torch-sparse">0.6.12</el-descriptions-item>
+						<el-descriptions-item label="torch-spline-conv">1.2.1</el-descriptions-item>
+						<el-descriptions-item label="torchaudio">0.10.1</el-descriptions-item>
+						<el-descriptions-item label="torchtext">0.11.0</el-descriptions-item>
+						<el-descriptions-item label="torchvision">0.11.2</el-descriptions-item>
+						<el-descriptions-item label="tornado">6.1</el-descriptions-item>
+						<el-descriptions-item label="numpy">1.21.2</el-descriptions-item>
+						<el-descriptions-item label="pandas">1.3.3</el-descriptions-item>
+					</el-descriptions>
+				</el-card>
+				<el-card shadow="never" header="spider&backendDependencies">
+					<el-descriptions border :column="3">
+						<el-descriptions-item label="Scrapy">2.6.1</el-descriptions-item>
+						<el-descriptions-item label="selenium">4.1.2</el-descriptions-item>
+						<el-descriptions-item label="requests">2.26.0</el-descriptions-item>
+						<el-descriptions-item label="requests-oauthlib">1.3.1</el-descriptions-item>
+						<el-descriptions-item label="urllib3">1.26.7</el-descriptions-item>
+						<el-descriptions-item label="Flask">2.0.3</el-descriptions-item>
+						<el-descriptions-item label="Flask-SQLAlchemy">2.1</el-descriptions-item>
+					</el-descriptions>
+				</el-card>
+				<el-card shadow="never" header="frontDependencies">
 					<el-descriptions border :column="3">
 						<el-descriptions-item v-for="(value, key) in data.dependencies" :key="key" :label="key">{{value}}</el-descriptions-item>
 					</el-descriptions>

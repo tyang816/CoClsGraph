@@ -4,7 +4,7 @@
 		<el-row :gutter="15">
 			<el-col :lg="24">
 				<el-card shadow="never">
-					<scEcharts height="1200px" :option="option"></scEcharts>
+					<scEcharts height="1000px" :option="option"></scEcharts>
 				</el-card>
 			</el-col>
 		</el-row>
@@ -30,8 +30,8 @@
 			return {
 				option: {
 					title: {
-						text: "Graph Basic",
-						subtext: "轻触图中结点获取更多信息",
+						text: "简单清洗数据上下文图",
+						subtext: "轻触图中结点获取更多信息，图可拖动~",
 					},
 					tooltip: {
 						triggerOn: 'click', // 触发时机
@@ -69,8 +69,9 @@
 							fontSize: 20, //关系（也即线）上的标签字体大小
 						},
 						force: {
-							repulsion: 200,
+							repulsion: 400,
 							edgeLength: 120,
+							gravity: 0.1
 						},
 						data: this.$TOOL.data.get('STEP2_DATA'),
 						// links: [],
