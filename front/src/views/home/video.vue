@@ -5,7 +5,7 @@
 				<el-card shadow="never" header="MP4点播">
 					<sc-video
 						ref="mp4"
-						src="https://cdn.jsdelivr.net/gh/scuiadmin/CDN/video/scui-player-demo-1080.mp4"
+						src="codesc.mp4"
 						poster="img/video.png"
 						:resource="resource"
 						:danmu="danmu"
@@ -56,8 +56,7 @@
 				input: '',
 				mode: 'scroll',
 				resource: [
-					{name: '720P', url: 'https://cdn.jsdelivr.net/gh/scuiadmin/CDN/video/scui-player-demo-720.mp4'},
-					{name: '1080P', url: 'https://cdn.jsdelivr.net/gh/scuiadmin/CDN/video/scui-player-demo-1080.mp4'}
+					
 				],
 				progressDot: [
 					{time: 3, text: '标记文字'}
@@ -66,7 +65,7 @@
 					{
 						id: '1',
 						start: 3000,
-						txt: 'VIDEO DEMO'
+						txt: '华东理工大学-20220123-展示视频'
 					},
 					{
 						id: '2',
