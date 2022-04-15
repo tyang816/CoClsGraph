@@ -4,7 +4,7 @@ import http from "@/utils/request"
 export default {
 	login:{
 		in: {
-			url: `http://127.0.0.1:5000/login`,
+			url: `http://180.76.168.236:5000/login`,
 			name: "登录",
 			post: async function(params){
 				return await http.post(this.url, params);

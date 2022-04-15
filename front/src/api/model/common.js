@@ -2,6 +2,13 @@ import config from "@/config"
 import http from "@/utils/request"
 
 export default {
+	jielong: {
+		url: `http://180.76.168.236:5000/jielong`,
+		name: "获取接龙对比",
+		post: async function(data={}){
+			return await http.post(this.url, data);
+		}
+	},
 	upload: {
 		url: `${config.API_URL}/upload`,
 		name: "文件上传",

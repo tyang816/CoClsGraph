@@ -6,7 +6,7 @@
 					<sc-video
 						ref="mp4"
 						src="https://cdn.jsdelivr.net/gh/scuiadmin/CDN/video/scui-player-demo-1080.mp4"
-						poster="https://cdn.jsdelivr.net/gh/scuiadmin/CDN/video/scui-player-demo-1080_Moment.jpg"
+						poster="img/video.png"
 						:resource="resource"
 						:danmu="danmu"
 						:progressDot="progressDot"

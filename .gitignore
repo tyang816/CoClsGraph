@@ -130,6 +130,7 @@ dmypy.json
 
 # front
 front/node_modules
+front/dist
 front/package-lock.json
 
 scui/

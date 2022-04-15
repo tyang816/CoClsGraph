@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from db import *
 import json
-
+import pandas as pd
+import os
 
 # 跨域支持
 def after_request(response):
@@ -34,6 +35,7 @@ def token():
         name = data['username']
         password = data['password']
         user = User.query.filter_by(name=name, password=password).first()
+
         if user:
             res = {
                 "code":"200", 
@@ -171,8 +173,41 @@ def relateshow():
                "nodes": nodes, "links": links}
         
     return jsonify(res)
-        
 
+@app.route("/jielong", methods=["POST"])
+def jielong():
+    res = {"code":"500"}
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        lines = data['content'].split('\n')
+        clazz = data['clazz']
+        temp_xlsx = os.listdir('./data')
+        total_xlsx = []
+        
+        names = []
+        for line in lines:
+            name = line.split()[1]
+            if name not in names:
+                names.append(name)
+        for xlsx in temp_xlsx:
+            if xlsx.endswith(".xlsx"):
+                total_xlsx.append(xlsx)
+
+        df = pd.read_excel('./data/'+total_xlsx[0])
+        names_all = df[df['班级'].isin([clazz])]['姓名'].tolist()
+        not_jielong = set(names_all) - set(names)
+        
+        ans1 = ""
+        ans2 = ""
+        for name in list(not_jielong):
+            tel = df[df['姓名'].isin([name])]['电话'].tolist()[0]
+            ans1 = ans1 + "@" + name + " "
+            ans2 = ans2 + str(list(not_jielong).index(name)+1) + '.' + name + "未回复+%s"%tel + '\n'
+
+        res = {
+            "code": "200", "ans1": ans1, "ans2": ans2
+        }
+    return jsonify(res)
 
 if __name__ == "__main__":
     app.run(debug=True)
