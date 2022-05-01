@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, jsonify
 from db import *
 import json
@@ -181,19 +183,14 @@ def jielong():
         data = json.loads(request.data.decode())
         lines = data['content'].split('\n')
         clazz = data['clazz']
-        temp_xlsx = os.listdir('./data')
-        total_xlsx = []
         
         names = []
         for line in lines:
             name = line.split()[1]
             if name not in names:
                 names.append(name)
-        for xlsx in temp_xlsx:
-            if xlsx.endswith(".xlsx"):
-                total_xlsx.append(xlsx)
 
-        df = pd.read_excel('./data/'+total_xlsx[0])
+        df = pd.read_excel('./data/信息学院18级在校学生名单.xlsx'+total_xlsx[0])
         names_all = df[df['班级'].isin([clazz])]['姓名'].tolist()
         not_jielong = set(names_all) - set(names)
         
@@ -206,6 +203,33 @@ def jielong():
 
         res = {
             "code": "200", "ans1": ans1, "ans2": ans2
+        }
+    return jsonify(res)
+
+@app.route("/jielong5", methods=["POST"])
+def jielong5():
+    res = {"code":"500"}
+    if request.method == 'POST':
+        data = json.loads(request.data.decode())
+        lines = data['content'].split('\n')
+        rooms = []
+        for line in lines:
+            room = line.split()[1][:3]
+            if room not in rooms:
+                rooms.append(room)
+        df = pd.read_excel('./data/23舍5层核酸分组.xlsx')
+        rooms_list = df['宿舍'].tolist()
+        rooms_all = []
+        for room in rooms_list:
+            rooms_all.append(room[7:])
+        not_jielong = set(rooms_all) - set(rooms)
+        
+        ans1 = ""
+        for room in list(not_jielong):
+            ans1 = ans1 + room + " "
+
+        res = {
+            "code": "200", "ans1": ans1
         }
     return jsonify(res)
 

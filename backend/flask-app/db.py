@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import data_tools as dt
@@ -416,4 +418,3 @@ if __name__ == '__main__':
     #         db.session.add(class2base)
     #         db.session.commit()
     migrate_method()
-    

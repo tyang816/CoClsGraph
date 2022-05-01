@@ -3,8 +3,15 @@ import http from "@/utils/request"
 
 export default {
 	jielong: {
-		url: `http://180.76.168.236:5000/jielong`,
+		url: `http://127.0.0.1:5000/jielong`,
 		name: "获取接龙对比",
+		post: async function(data={}){
+			return await http.post(this.url, data);
+		}
+	},
+	jielong5: {
+		url: `http://127.0.0.1:5000/jielong5`,
+		name: "获取接龙5楼层对比",
 		post: async function(data={}){
 			return await http.post(this.url, data);
 		}
